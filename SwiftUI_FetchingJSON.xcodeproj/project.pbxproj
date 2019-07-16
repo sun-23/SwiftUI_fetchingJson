@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A4010AA322DDAFD900CCBE68 /* foodRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4010AA222DDAFD900CCBE68 /* foodRow.swift */; };
 		A443AEA222DDAC5600241C69 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A443AEA122DDAC5600241C69 /* AppDelegate.swift */; };
 		A443AEA422DDAC5600241C69 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A443AEA322DDAC5600241C69 /* SceneDelegate.swift */; };
 		A443AEA622DDAC5600241C69 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A443AEA522DDAC5600241C69 /* ContentView.swift */; };
@@ -16,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A4010AA222DDAFD900CCBE68 /* foodRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = foodRow.swift; sourceTree = "<group>"; };
 		A443AE9E22DDAC5600241C69 /* SwiftUI_FetchingJSON.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftUI_FetchingJSON.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A443AEA122DDAC5600241C69 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A443AEA322DDAC5600241C69 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -63,6 +65,7 @@
 				A443AEAC22DDAC5700241C69 /* LaunchScreen.storyboard */,
 				A443AEAF22DDAC5700241C69 /* Info.plist */,
 				A443AEA922DDAC5700241C69 /* Preview Content */,
+				A4010AA222DDAFD900CCBE68 /* foodRow.swift */,
 			);
 			path = SwiftUI_FetchingJSON;
 			sourceTree = "<group>";
@@ -146,6 +149,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A4010AA322DDAFD900CCBE68 /* foodRow.swift in Sources */,
 				A443AEA222DDAC5600241C69 /* AppDelegate.swift in Sources */,
 				A443AEA422DDAC5600241C69 /* SceneDelegate.swift in Sources */,
 				A443AEA622DDAC5600241C69 /* ContentView.swift in Sources */,

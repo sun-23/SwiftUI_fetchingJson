@@ -7,10 +7,118 @@
 //
 
 import SwiftUI
+import Combine
+
+struct foodData:Decodable {
+    
+    let NameFood:String
+    let Price:String
+    let ImagePath:String
+    let Detail:String
+    
+}
+
+class NetworkManager: BindableObject {
+    var didChange = PassthroughSubject<NetworkManager, Never>()
+    
+    var arrdata = [foodData]() {
+        didSet {
+            didChange.send(self)
+        }
+    }
+    
+    init() {
+        guard let url = URL(string: "https://www.androidthai.in.th/ssm/getAllDatafoodTABLE.php") else { return }
+        URLSession.shared.dataTask(with: url) { (data, _, _) in
+            
+            guard let data = data else { return }
+            
+            let arrdata = try! JSONDecoder().decode([foodData].self, from: data)
+            DispatchQueue.main.async {
+                self.arrdata = arrdata
+            }
+            print(arrdata)
+            print("completed fetching json")
+            
+            }.resume()
+    }
+}
 
 struct ContentView : View {
+    
+    @State var networkManager = NetworkManager()
+    
     var body: some View {
-        Text("Hello World")
+        NavigationView {
+            List (
+                networkManager.arrdata.identified(by: \.NameFood)
+            ) { food in
+                row(food: food)
+            }.navigationBarTitle(Text("Manu"))
+        }
+
+    }
+}
+
+struct row: View {
+    
+    let food : foodData
+
+    var body: some View {
+        
+        VStack(alignment: .leading) {
+            ImageViewWidget(ImagePath: String(food.ImagePath))
+            //Image("Image")
+               // .resizable()
+               // .frame(width: 320, height: 180)
+                //.cornerRadius(30)
+            Text(food.NameFood)
+            Text(food.Price + " บาท")
+            Text(food.ImagePath)
+        }
+    }
+    
+}
+
+
+
+class ImageLoader: BindableObject {
+    var didChange = PassthroughSubject<Data, Never>()
+    
+    var data = Data() {
+        didSet {
+            didChange.send(data)
+        }
+    }
+    
+    init(ImagePath: String) {
+        // fetch image data and then call didChange
+        
+        let url = URL(string: ImagePath)
+        
+        let data = try? Data(contentsOf: url!)
+        if let data = data {
+            //let image = UIImage(data: data)
+            
+            self.data = data
+        }
+    }
+}
+
+struct ImageViewWidget: View {
+    
+    @ObjectBinding var imageLoader: ImageLoader
+    
+    init(ImagePath: String) {
+        imageLoader = ImageLoader(ImagePath: ImagePath)
+    }
+    
+    var body: some View {
+        Image(uiImage: (imageLoader.data.count == 0) ? UIImage(named: "Image")! : UIImage(data: imageLoader.data)!)
+        //Image(uiImage: UIImage(data: imageLoader.data)!)
+            .resizable()
+            .frame(width: 320, height: 180)
+            .cornerRadius(10)
     }
 }
 
