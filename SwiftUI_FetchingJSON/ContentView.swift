@@ -53,7 +53,11 @@ struct ContentView : View {
             List (
                 networkManager.arrdata.identified(by: \.NameFood)
             ) { food in
-                row(food: food)
+               
+                NavigationButton(destination: detailView(food: food)) {
+                     row(food: food)
+                }
+                
             }.navigationBarTitle(Text("Manu"))
         }
 
@@ -68,16 +72,34 @@ struct row: View {
         
         VStack(alignment: .leading) {
             ImageViewWidget(ImagePath: String(food.ImagePath))
-            //Image("Image")
-               // .resizable()
-               // .frame(width: 320, height: 180)
-                //.cornerRadius(30)
-            Text(food.NameFood)
-            Text(food.Price + " บาท")
-            Text(food.ImagePath)
+                HStack {
+                    Text(food.NameFood)
+                     Spacer()
+                    Text(food.Price + " บาท")
+                    
+                }.padding()
         }
     }
     
+}
+
+struct detailView: View {
+    
+    let food : foodData
+    
+    var body : some View {
+        
+        VStack(alignment: .leading) {
+            ImageViewWidget(ImagePath: String(food.ImagePath))
+            HStack {
+                Text(food.NameFood)
+                Spacer()
+                Text(food.Price + " บาท")
+                }
+            Text(food.Detail).lineLimit(10)
+            Spacer()
+        }.padding()
+    }
 }
 
 
@@ -93,15 +115,15 @@ class ImageLoader: BindableObject {
     
     init(ImagePath: String) {
         // fetch image data and then call didChange
-        
-        let url = URL(string: ImagePath)
-        
-        let data = try? Data(contentsOf: url!)
-        if let data = data {
-            //let image = UIImage(data: data)
+        guard let url = URL(string: ImagePath) else { return }
+        URLSession.shared.dataTask(with: url) { (data, _, _) in
+            guard let data = data else { return }
             
-            self.data = data
-        }
+            DispatchQueue.main.async {
+                self.data = data
+            }
+            
+            }.resume()
     }
 }
 
