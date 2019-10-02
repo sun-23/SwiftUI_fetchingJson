@@ -18,16 +18,12 @@ struct foodData:Decodable {
     
 }
 
-class NetworkManager: BindableObject {
-    var didChange = PassthroughSubject<NetworkManager, Never>()
+class NetworkManager: ObservableObject {
     
-    var arrdata = [foodData]() {
-        didSet {
-            didChange.send(self)
-        }
-    }
+    @Published
+    var arrdata = [foodData]()
     
-    init() {
+    func fetchManu()  {
         guard let url = URL(string: "https://www.androidthai.in.th/ssm/getAllDatafoodTABLE.php") else { return }
         URLSession.shared.dataTask(with: url) { (data, _, _) in
             
@@ -46,19 +42,25 @@ class NetworkManager: BindableObject {
 
 struct ContentView : View {
     
-    @State var networkManager = NetworkManager()
+    @ObservedObject var networkManager = NetworkManager()
     
     var body: some View {
         NavigationView {
-            List (
-                networkManager.arrdata.identified(by: \.NameFood)
-            ) { food in
+            List (networkManager.arrdata, id: \.NameFood) { food in
                
-                NavigationButton(destination: detailView(food: food)) {
+                NavigationLink(destination: detailView(food: food)) {
                      row(food: food)
                 }
                 
             }.navigationBarTitle(Text("Manu"))
+            .navigationBarItems(trailing: Button(action: {
+                print("Fetching json data")
+                
+                self.networkManager.fetchManu()
+                
+            }, label: {
+                Text("Fetch Manu")
+            }))
         }
 
     }
@@ -71,13 +73,19 @@ struct row: View {
     var body: some View {
         
         VStack(alignment: .leading) {
-            ImageViewWidget(ImagePath: String(food.ImagePath))
+            ZStack {
+                ImageViewWidget(ImagePath: String(food.ImagePath))
+                
                 HStack {
                     Text(food.NameFood)
-                     Spacer()
+                    .baselineOffset(CGFloat(-80))
+                    .foregroundColor(.gray)
+                    Spacer()
                     Text(food.Price + " บาท")
-                    
-                }.padding()
+                    .baselineOffset(CGFloat(-80))
+                    .foregroundColor(.gray)
+                    }.padding()
+            }
         }
     }
     
@@ -104,14 +112,9 @@ struct detailView: View {
 
 
 
-class ImageLoader: BindableObject {
-    var didChange = PassthroughSubject<Data, Never>()
-    
-    var data = Data() {
-        didSet {
-            didChange.send(data)
-        }
-    }
+class ImageLoader: ObservableObject {
+    @Published
+    var data = Data()
     
     init(ImagePath: String) {
         // fetch image data and then call didChange
@@ -129,7 +132,7 @@ class ImageLoader: BindableObject {
 
 struct ImageViewWidget: View {
     
-    @ObjectBinding var imageLoader: ImageLoader
+    @ObservedObject var imageLoader: ImageLoader
     
     init(ImagePath: String) {
         imageLoader = ImageLoader(ImagePath: ImagePath)
