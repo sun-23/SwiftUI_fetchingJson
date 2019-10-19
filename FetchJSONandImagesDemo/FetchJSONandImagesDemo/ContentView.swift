@@ -8,6 +8,7 @@
 
 import SwiftUI
 import Combine
+import KingfisherSwiftUI
 
 struct Course: Decodable {
     let name, imageUrl: String
@@ -71,7 +72,11 @@ struct CourseDetailView: View {
     
     var body: some View {
         VStack (alignment: .leading) {
-            ImageViewWidget(imageUrl: course.imageUrl)
+            KFImage(URL(string: course.imageUrl))
+            .resizable()
+            .frame(width: 320, height: 180)
+            .cornerRadius(10)
+            //ImageViewWidget(imageUrl: course.imageUrl)
             //            Image("apple")
             //                .resizable()
             //                .frame(width: 200, height: 200)
@@ -90,7 +95,11 @@ struct CourseRowView: View {
     
     var body: some View {
         VStack (alignment: .leading) {
-            ImageViewWidget(imageUrl: course.imageUrl)
+            KFImage(URL(string: course.imageUrl))
+            .resizable()
+            .frame(width: 320, height: 180)
+            .cornerRadius(10)
+            //ImageViewWidget(imageUrl: course.imageUrl)
 //            Image("apple")
 //                .resizable()
 //                .frame(width: 200, height: 200)
